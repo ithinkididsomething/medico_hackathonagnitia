@@ -1,6 +1,12 @@
 import HealthBadge from './HealthBadge.jsx'
 
-export default function Layout({ children }) {
+const NAV_ITEMS = [
+  { id: 'assess', label: 'New assessment' },
+  { id: 'dashboard', label: 'Referral dashboard' },
+  { id: 'knowledge', label: 'Clinical reference' },
+]
+
+export default function Layout({ children, view = 'assess', onNavigate }) {
   return (
     <div className="app-shell">
       <header className="app-header">
@@ -9,6 +15,19 @@ export default function Layout({ children }) {
           <span className="brand-name">medico</span>
           <span className="brand-tag">referral decision support</span>
         </div>
+        <nav className="main-nav" aria-label="Main navigation">
+          {NAV_ITEMS.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              className={`nav-tab${view === item.id ? ' is-active' : ''}`}
+              aria-current={view === item.id ? 'page' : undefined}
+              onClick={() => onNavigate?.(item.id)}
+            >
+              {item.label}
+            </button>
+          ))}
+        </nav>
         <HealthBadge />
       </header>
 

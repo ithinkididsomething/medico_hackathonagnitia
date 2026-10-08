@@ -56,6 +56,10 @@ def redact_database_url(url: str) -> str:
     return url
 
 
+def _env_bool(name: str, default: str) -> bool:
+    return _env(name, default).strip().lower() in {"1", "true", "yes", "on"}
+
+
 @dataclass(frozen=True)
 class Settings:
     backend_host: str
@@ -68,6 +72,9 @@ class Settings:
     osm_tile_url: str
     user_agent: str
     routing_api_key: str  # never returned by any API endpoint
+    routing_enabled: bool  # false -> straight-line placeholder travel estimates
+    clinic_latitude: float  # configurable demo clinic location
+    clinic_longitude: float
 
     @property
     def database_path(self) -> Path | None:
@@ -94,4 +101,7 @@ def get_settings() -> Settings:
         ),
         user_agent=_env("USER_AGENT", "medico-dev/0.1 (local development)"),
         routing_api_key=_env("ROUTING_API_KEY", ""),
+        routing_enabled=_env_bool("ROUTING_ENABLED", "true"),
+        clinic_latitude=float(_env("CLINIC_LATITUDE", "23.2599")),
+        clinic_longitude=float(_env("CLINIC_LONGITUDE", "77.4126")),
     )

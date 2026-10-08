@@ -1,0 +1,128 @@
+[
+  {
+    "review_id": "REV-UNRESOLVED-COND-TB-SPINE-1",
+    "type": "unresolved_condition_id",
+    "condition_id": "COND-TB-SPINE",
+    "target_id": "COND-LUMBAR-STRAIN",
+    "target_name": "Lumbar strain",
+    "reason": "Referenced condition ID 'COND-LUMBAR-STRAIN' not found in registered conditions.",
+    "sources_checked": []
+  },
+  {
+    "review_id": "REV-UNRESOLVED-COND-TB-SPINE-2",
+    "type": "unresolved_condition_id",
+    "condition_id": "COND-TB-SPINE",
+    "target_id": "COND-SCIATICA",
+    "target_name": "Sciatica / Slipped disc",
+    "reason": "Referenced condition ID 'COND-SCIATICA' not found in registered conditions.",
+    "sources_checked": []
+  },
+  {
+    "review_id": "REV-UNRESOLVED-COND-TB-PULMONARY-1",
+    "type": "unresolved_condition_id",
+    "condition_id": "COND-TB-PULMONARY",
+    "target_id": "COND-ASTHMA",
+    "target_name": "Bronchial Asthma",
+    "reason": "Referenced condition ID 'COND-ASTHMA' not found in registered conditions.",
+    "sources_checked": []
+  },
+  {
+    "review_id": "REV-UNRESOLVED-COND-TB-PULMONARY-2",
+    "type": "unresolved_condition_id",
+    "condition_id": "COND-TB-PULMONARY",
+    "target_id": "COND-BRONCHITIS",
+    "target_name": "Chronic Bronchitis / COPD",
+    "reason": "Referenced condition ID 'COND-BRONCHITIS' not found in registered conditions.",
+    "sources_checked": []
+  },
+  {
+    "review_id": "REV-UNRESOLVED-COND-HTN-1",
+    "type": "unresolved_condition_id",
+    "condition_id": "COND-HTN",
+    "target_id": "COND-WEAKNESS",
+    "target_name": "Generalized weakness / fatigue",
+    "reason": "Referenced condition ID 'COND-WEAKNESS' not found in registered conditions.",
+    "sources_checked": []
+  },
+  {
+    "review_id": "REV-UNRESOLVED-COND-T2D-1",
+    "type": "unresolved_condition_id",
+    "condition_id": "COND-T2D",
+    "target_id": "COND-DEHYDRATION",
+    "target_name": "Physical exhaustion / Dehydration",
+    "reason": "Referenced condition ID 'COND-DEHYDRATION' not found in registered conditions.",
+    "sources_checked": []
+  },
+  {
+    "review_id": "REV-UNRESOLVED-COND-BPPV-1",
+    "type": "unresolved_condition_id",
+    "condition_id": "COND-BPPV",
+    "target_id": "COND-CERVICAL-SPONDYLOSIS",
+    "target_name": "Cervical Spondylosis",
+    "reason": "Referenced condition ID 'COND-CERVICAL-SPONDYLOSIS' not found in registered conditions.",
+    "sources_checked": []
+  },
+  {
+    "review_id": "REV-UNRESOLVED-COND-BPPV-2",
+    "type": "unresolved_condition_id",
+    "condition_id": "COND-BPPV",
+    "target_id": "COND-ANEMIA",
+    "target_name": "Nutritional Anemia",
+    "reason": "Referenced condition ID 'COND-ANEMIA' not found in registered conditions.",
+    "sources_checked": []
+  },
+  {
+    "review_id": "REV-UNRESOLVED-COND-DEPRESSION-1",
+    "type": "unresolved_condition_id",
+    "condition_id": "COND-DEPRESSION",
+    "target_id": "COND-WEAKNESS",
+    "target_name": "Physical Exhaustion / Somatic Illness",
+    "reason": "Referenced condition ID 'COND-WEAKNESS' not found in registered conditions.",
+    "sources_checked": []
+  },
+  {
+    "review_id": "REV-UNRESOLVED-COND-MALARIA-1",
+    "type": "unresolved_condition_id",
+    "condition_id": "COND-MALARIA",
+    "target_id": "COND-DENGUE",
+    "target_name": "Dengue Fever",
+    "reason": "Referenced condition ID 'COND-DENGUE' not found in registered conditions.",
+    "sources_checked": []
+  },
+  {
+    "review_id": "REV-UNRESOLVED-COND-MALARIA-2",
+    "type": "unresolved_condition_id",
+    "condition_id": "COND-MALARIA",
+    "target_id": "COND-TYPHOID",
+    "target_name": "Typhoid (Enteric Fever)",
+    "reason": "Referenced condition ID 'COND-TYPHOID' not found in registered conditions.",
+    "sources_checked": []
+  },
+  {
+    "review_id": "REV-UNRESOLVED-COND-MALARIA-3",
+    "type": "unresolved_condition_id",
+    "condition_id": "COND-MALARIA",
+    "target_id": "COND-SCRUB-TYPHUS",
+    "target_name": "Scrub Typhus",
+    "reason": "Referenced condition ID 'COND-SCRUB-TYPHUS' not found in registered conditions.",
+    "sources_checked": []
+  },
+  {
+    "review_id": "REV-UNRESOLVED-COND-APPENDICITIS-1",
+    "type": "unresolved_condition_id",
+    "condition_id": "COND-APPENDICITIS",
+    "target_id": "COND-GASTRITIS",
+    "target_name": "Gastritis / Indigestion",
+    "reason": "Referenced condition ID 'COND-GASTRITIS' not found in registered conditions.",
+    "sources_checked": []
+  },
+  {
+    "review_id": "REV-UNRESOLVED-COND-APPENDICITIS-2",
+    "type": "unresolved_condition_id",
+    "condition_id": "COND-APPENDICITIS",
+    "target_id": "COND-PID",
+    "target_name": "Pelvic Inflammatory Disease (PID)",
+    "reason": "Referenced condition ID 'COND-PID' not found in registered conditions.",
+    "sources_checked": []
+  }
+]

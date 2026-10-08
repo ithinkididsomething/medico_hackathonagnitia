@@ -40,10 +40,18 @@ function fieldsFromDetail(detail) {
 }
 
 async function request(path, options = {}) {
-  const response = await fetch(`${BASE_URL}${path}`, {
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-    ...options,
-  })
+  let response
+  try {
+    response = await fetch(`${BASE_URL}${path}`, {
+      headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+      ...options,
+    })
+  } catch {
+    // fetch itself failed: backend down, proxy missing, network offline.
+    throw new ApiError(
+      `Cannot reach the backend for ${path}. Check that the API server is running, then retry.`
+    )
+  }
 
   if (response.status === 204) return null
 
@@ -62,6 +70,8 @@ async function request(path, options = {}) {
       message = 'Please correct the highlighted fields.'
     } else if (typeof detail === 'string') {
       message = detail
+    } else if (response.status >= 500) {
+      message = 'The server encountered a problem handling this request. Please retry; if it persists, check the API logs.'
     } else {
       message = `Request failed with status ${response.status}`
     }
@@ -83,5 +93,44 @@ export const api = {
       body: JSON.stringify(rules ? { input, rules } : { input }),
     }),
   mapsConfig: () => request('/api/maps/config'),
+  route: (origin, destination, profile) =>
+    request('/api/route', {
+      method: 'POST',
+      body: JSON.stringify({ origin, destination, ...(profile ? { profile } : {}) }),
+    }),
   listLocations: () => request('/api/locations'),
+  // Clinic resources + hospital matching (Prompt 2)
+  listHospitals: () => request('/api/hospitals'),
+  getClinic: () => request('/api/clinics/current'),
+  updateClinic: (patch) =>
+    request('/api/clinics/current', { method: 'PATCH', body: JSON.stringify(patch) }),
+  resetClinic: () => request('/api/clinics/current', { method: 'DELETE' }),
+  matchHospitals: (body) =>
+    request('/api/referrals/match', { method: 'POST', body: JSON.stringify(body) }),
+  // Referral records + dashboard (Prompt 4)
+  createReferral: (body) =>
+    request('/api/referrals', { method: 'POST', body: JSON.stringify(body) }),
+  listReferrals: (filters = {}) => {
+    const params = new URLSearchParams()
+    for (const [key, value] of Object.entries(filters)) {
+      if (value) params.set(key, value)
+    }
+    const qs = params.toString()
+    return request(`/api/referrals${qs ? `?${qs}` : ''}`)
+  },
+  getReferral: (ref) => request(`/api/referrals/${encodeURIComponent(ref)}`),
+  updateReferralStatus: (ref, body) =>
+    request(`/api/referrals/${encodeURIComponent(ref)}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    }),
+  referralSummaryText: (ref) =>
+    request(`/api/referrals/${encodeURIComponent(ref)}/summary.txt`),
+  // Rural Diagnostic Risk & Context Knowledge (Prompt 8)
+  listKnowledgeConditions: () => request('/api/knowledge/conditions'),
+  getKnowledgeCondition: (id) => request(`/api/knowledge/conditions/${id}`),
+  listSystemicDrivers: () => request('/api/knowledge/systemic-drivers'),
+  listInjuryRisks: () => request('/api/knowledge/injury-risks'),
+  getKnowledgeMetadata: () => request('/api/knowledge/metadata'),
+  getKnowledgeReviewQueue: () => request('/api/knowledge/review-queue'),
 }

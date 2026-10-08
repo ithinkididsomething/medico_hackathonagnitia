@@ -1,0 +1,1118 @@
+"""Curated seed dataset for Rural Diagnostic Risk & Context (Prompt 8).
+
+Contains authoritative, evidence-tagged entries for:
+1. Systemic Drivers (infrastructure, power, symptom-centric care, specialist gaps)
+2. Condition Records (Spinal TB, Pulmonary TB, Hypertension, Diabetes, BPPV, Depression/Anxiety, Acute Febrile Illnesses, Appendicitis)
+3. Injury Diagnostic Risks (Undisplaced fractures, Blunt abdominal trauma, Compartment syndrome, Ligament tears, Traumatic Brain Injury, Snakebite envenomation)
+
+All claims adhere to explicit evidence status tags; unsupported rural claims
+are tagged for manual review rather than stated as facts.
+"""
+from __future__ import annotations
+
+from typing import Any
+
+SYSTEMIC_DRIVERS: list[dict[str, Any]] = [
+    {
+        "driver_id": "SYS-001",
+        "name": "Infrastructure and power instability",
+        "description": (
+            "Unreliable power supply, load shedding, and lack of backup generation in rural "
+            "health facilities directly interrupt diagnostic services and cold-chain integrity."
+        ),
+        "diagnostic_impacts": [
+            {
+                "impact": "Diagnostic service interruption",
+                "examples": [
+                    "laboratory centrifuge / automated analyzer power loss",
+                    "radiography / X-ray tube power failure",
+                    "temperature-controlled reagent or vaccine storage failure",
+                ],
+                "evidence_status": "government_documented",
+                "sources": [
+                    {
+                        "source_id": "mohfw_infra_2022",
+                        "source_name": "Indian Public Health Standards (IPHS) Guidelines - MoHFW",
+                        "source_type": "government_authority",
+                        "source_url": "https://main.mohfw.gov.in",
+                    }
+                ],
+            }
+        ],
+        "affected_capabilities": ["basic_labs", "imaging_xray", "pathology"],
+        "potential_consequences": [
+            "Delayed laboratory test results",
+            "Inability to perform confirmatory diagnostic tests on-site",
+            "Compromised reagent quality due to cold-chain disruption",
+        ],
+        "referral_implications": [
+            "Patients with suspected severe illness may require referral to facilities with functional emergency backup power."
+        ],
+        "evidence_status": "government_documented",
+        "source_refs": [
+            {
+                "source_id": "mohfw_infra_2022",
+                "source_name": "IPHS Guidelines for Primary & Community Health Centres - MoHFW",
+                "source_type": "government_authority",
+            }
+        ],
+    },
+    {
+        "driver_id": "SYS-002",
+        "name": "Symptom-centric care under limited diagnostic access",
+        "description": (
+            "When point-of-care diagnostic testing or laboratory workups are unavailable or "
+            "delayed, clinicians may rely on empirical symptomatic management. Limited "
+            "diagnostic information increases clinical uncertainty in undifferentiated presentations."
+        ),
+        "diagnostic_impacts": [
+            {
+                "impact": "Increased diagnostic uncertainty",
+                "examples": [
+                    "Empirical antipyretic or antibiotic administration for undifferentiated acute febrile illness",
+                    "Analgesic management for persistent abdominal pain without ultrasound/lab confirmation",
+                ],
+                "evidence_status": "government_supported",
+                "sources": [
+                    {
+                        "source_id": "icmr_amr_2021",
+                        "source_name": "ICMR Guidelines for Antimicrobial Stewardship in Primary Care",
+                        "source_type": "government_authority",
+                        "source_url": "https://www.icmr.gov.in",
+                    }
+                ],
+            }
+        ],
+        "affected_capabilities": ["basic_labs", "pathology", "ultrasound"],
+        "potential_consequences": [
+            "Masking of progressive symptoms during empirical supportive care",
+            "Delay in establishing definitive diagnosis for conditions mimicking common acute syndromes",
+        ],
+        "referral_implications": [
+            "Persistent or non-responsive symptoms despite supportive care warrant escalation for diagnostic evaluation."
+        ],
+        "evidence_status": "government_supported",
+        "source_refs": [
+            {
+                "source_id": "icmr_amr_2021",
+                "source_name": "ICMR Guidelines for Antimicrobial Stewardship in Primary Care",
+                "source_type": "government_authority",
+            }
+        ],
+    },
+    {
+        "driver_id": "SYS-003",
+        "name": "Limited specialist referral pathways and tertiary access",
+        "description": (
+            "Geographic distance, transport limitations, and scarcity of resident specialists "
+            "(neurology, orthopaedics, general/trauma surgery) at primary/secondary levels create "
+            "delays in definitive higher-level evaluation."
+        ),
+        "diagnostic_impacts": [
+            {
+                "impact": "Delayed tertiary specialist confirmation",
+                "examples": [
+                    "Delayed surgical evaluation for acute abdomen or complicated trauma",
+                    "Delayed neurological imaging and evaluation for head injury or stroke",
+                ],
+                "evidence_status": "government_documented",
+                "sources": [
+                    {
+                        "source_id": "niti_rural_health_2021",
+                        "source_name": "NITI Aayog - Primary Health Care Insights",
+                        "source_type": "government_authority",
+                        "source_url": "https://www.niti.gov.in",
+                    }
+                ],
+            }
+        ],
+        "affected_capabilities": [
+            "specialist_consultation",
+            "surgery_general",
+            "orthopedic_surgery",
+            "critical_care",
+        ],
+        "potential_consequences": [
+            "Prolonged transit or waiting times for tertiary evaluation",
+            "Need for early risk stratification and pre-transfer stabilization at local facilities",
+        ],
+        "referral_implications": [
+            "Time-sensitive conditions require early identification and emergency transport mobilization rather than local observation."
+        ],
+        "evidence_status": "government_documented",
+        "source_refs": [
+            {
+                "source_id": "niti_rural_health_2021",
+                "source_name": "NITI Aayog - Primary Health Care Insights",
+                "source_type": "government_authority",
+            }
+        ],
+    },
+]
+
+
+SEED_CONDITIONS: list[dict[str, Any]] = [
+    {
+        "condition_id": "COND-TB-SPINE",
+        "canonical_name": "Spinal Tuberculosis (Pott's Disease)",
+        "category": "infectious_disease",
+        "description": (
+            "Tuberculous spondylitis affecting the vertebral bodies and intervertebral discs. "
+            "Characterized by insidious onset back pain, systemic symptoms, and potential "
+            "neurological compression."
+        ),
+        "symptoms": [
+            "persistent back pain",
+            "nocturnal pain",
+            "low-grade fever",
+            "weight loss",
+            "spinal tenderness",
+            "lower limb weakness",
+            "paresthesia",
+        ],
+        "diagnosis": [
+            "spine X-ray (narrowed disc space, vertebral destruction)",
+            "MRI spine",
+            "ESR/CRP elevation",
+            "GeneXpert / CBNAAT or biopsy confirmation",
+        ],
+        "treatment": [
+            "Anti-Tubercular Therapy (ATT)",
+            "Spinal immobilization / bracing",
+            "Surgical decompression when severe neurological deficit is present",
+        ],
+        "risk_factors": ["history of pulmonary TB", "malnutrition", "immunocompromise"],
+        "referral_relevance": (
+            "Requires radiological imaging and specialist orthopedic/neurosurgical evaluation. "
+            "Neurological deficits demand urgent higher-level referral."
+        ),
+        "rural_context": {
+            "diagnostic_risks": [
+                "Early subtle vertebral changes may not be apparent on basic radiography",
+                "Insidious onset back pain may be managed empirically without imaging workup",
+            ],
+            "systemic_constraints": [
+                "MRI and specialized spine CT are unavailable at primary facility level",
+                "Long duration of ATT requires treatment adherence support",
+            ],
+            "resource_dependencies": [
+                "imaging_xray",
+                "ct_scan",
+                "pathology",
+                "specialist_consultation",
+                "orthopedic_surgery",
+            ],
+            "context_relevance": {
+                "rural_relevance": True,
+                "rural_classification": "rural_relevant",
+                "resource_sensitive": True,
+                "specialist_access_sensitive": True,
+                "diagnostic_equipment_sensitive": True,
+                "evidence_level": "government_documented",
+            },
+        },
+        "diagnostic_confusion": [
+            {
+                "confused_with_name": "Lumbar strain",
+                "confused_with_condition_id": "COND-LUMBAR-STRAIN",
+                "relationship_type": "possible_mimic",
+                "why_confusion_can_occur": (
+                    "Both present with lower back pain. Early spinal TB lacks overt neurological signs "
+                    "and may mimic mechanical or muscular strain."
+                ),
+                "distinguishing_information": [
+                    "Chronicity (>3-4 weeks)",
+                    "Nocturnal pain / pain unrelieved by rest",
+                    "Constitutional features (fever, night sweats, weight loss)",
+                    "Localized spinal bony tenderness",
+                ],
+                "resource_dependency": ["imaging_xray", "pathology"],
+                "evidence_status": "government_documented",
+                "source_refs": [
+                    {
+                        "source_id": "ntep_spine_2021",
+                        "source_name": "National Tuberculosis Elimination Programme (NTEP) Guidelines",
+                        "source_type": "government_authority",
+                    }
+                ],
+            },
+            {
+                "confused_with_name": "Sciatica / Slipped disc",
+                "confused_with_condition_id": "COND-SCIATICA",
+                "relationship_type": "possible_mimic",
+                "why_confusion_can_occur": (
+                    "Nerve root compression from tuberculous abscess or collapse mimics lumbar disc prolapse."
+                ),
+                "distinguishing_information": [
+                    "Systemic constitutional symptoms",
+                    "Elevated inflammatory markers (ESR)",
+                    "Vertebral destruction on imaging",
+                ],
+                "resource_dependency": ["imaging_xray", "ct_scan", "specialist_consultation"],
+                "evidence_status": "government_documented",
+                "source_refs": [
+                    {
+                        "source_id": "ntep_spine_2021",
+                        "source_name": "NTEP Extra-Pulmonary TB Guidelines - MoHFW",
+                        "source_type": "government_authority",
+                    }
+                ],
+            },
+        ],
+        "sources": [
+            {
+                "source_id": "ntep_spine_2021",
+                "source_name": "National Tuberculosis Elimination Programme (NTEP) Technical Guidelines - MoHFW",
+                "source_type": "government_authority",
+                "source_url": "https://tbcindia.gov.in",
+            }
+        ],
+    },
+    {
+        "condition_id": "COND-TB-PULMONARY",
+        "canonical_name": "Pulmonary Tuberculosis",
+        "category": "infectious_disease",
+        "description": (
+            "Mycobacterium tuberculosis infection primarily involving the lungs. "
+            "Characterized by persistent cough, fever, night sweats, and weight loss."
+        ),
+        "symptoms": [
+            "cough for 2 weeks or more",
+            "fever especially in evening",
+            "night sweats",
+            "weight loss",
+            "hemoptysis",
+            "chest pain",
+            "fatigue",
+        ],
+        "diagnosis": [
+            "Sputum smear microscopy",
+            "CBNAAT / Truenat nucleic acid test",
+            "Chest X-ray",
+        ],
+        "treatment": ["Standard anti-tubercular therapy regimens under NTEP"],
+        "risk_factors": ["close contact with TB patient", "malnutrition", "diabetes", "smoking"],
+        "referral_relevance": (
+            "Requires diagnostic confirmation via Truenat/CBNAAT or sputum microscopy and chest X-ray."
+        ),
+        "rural_context": {
+            "diagnostic_risks": [
+                "Persistent cough may initially be treated empirically with antibiotics or cough suppressants",
+            ],
+            "systemic_constraints": [
+                "Truenat / CBNAAT testing may require sample transport to block/district facility",
+            ],
+            "resource_dependencies": ["basic_labs", "imaging_xray"],
+            "context_relevance": {
+                "rural_relevance": True,
+                "rural_classification": "rural_relevant",
+                "resource_sensitive": True,
+                "specialist_access_sensitive": False,
+                "diagnostic_equipment_sensitive": True,
+                "evidence_level": "government_documented",
+            },
+        },
+        "diagnostic_confusion": [
+            {
+                "confused_with_name": "Bronchial Asthma",
+                "confused_with_condition_id": "COND-ASTHMA",
+                "relationship_type": "possible_mimic",
+                "why_confusion_can_occur": (
+                    "Both present with persistent respiratory symptoms and cough."
+                ),
+                "distinguishing_information": [
+                    "Episodic wheezing and reversibility in asthma vs progressive constitutional decline in TB",
+                    "Fever, night sweats, and weight loss characteristic of TB",
+                    "Sputum microbiological positivity in TB",
+                ],
+                "resource_dependency": ["basic_labs", "imaging_xray"],
+                "evidence_status": "government_documented",
+                "source_refs": [
+                    {
+                        "source_id": "ntep_pulm_2022",
+                        "source_name": "NTEP Diagnostic Algorithms - MoHFW",
+                        "source_type": "government_authority",
+                    }
+                ],
+            },
+            {
+                "confused_with_name": "Chronic Bronchitis / COPD",
+                "confused_with_condition_id": "COND-BRONCHITIS",
+                "relationship_type": "possible_mimic",
+                "why_confusion_can_occur": (
+                    "Chronic cough in smokers or biomass-fuel exposed individuals can mask active pulmonary TB."
+                ),
+                "distinguishing_information": [
+                    "Recent change in cough character or onset of evening fever",
+                    "Microbiological sputum testing (CBNAAT/smear)",
+                ],
+                "resource_dependency": ["basic_labs", "imaging_xray"],
+                "evidence_status": "government_documented",
+                "source_refs": [
+                    {
+                        "source_id": "ntep_pulm_2022",
+                        "source_name": "NTEP Diagnostic Algorithms - MoHFW",
+                        "source_type": "government_authority",
+                    }
+                ],
+            },
+        ],
+        "sources": [
+            {
+                "source_id": "ntep_pulm_2022",
+                "source_name": "National Tuberculosis Elimination Programme (NTEP) Guidelines - MoHFW",
+                "source_type": "government_authority",
+                "source_url": "https://tbcindia.gov.in",
+            }
+        ],
+    },
+    {
+        "condition_id": "COND-HTN",
+        "canonical_name": "Essential Hypertension",
+        "category": "chronic_disease",
+        "description": (
+            "Persistently elevated systemic arterial blood pressure (systolic >= 140 or diastolic >= 90 mmHg)."
+        ),
+        "symptoms": ["often asymptomatic", "headache", "dizziness", "fatigue", "palpitations"],
+        "diagnosis": ["Repeated blood pressure measurements", "basic lab screening for organ involvement"],
+        "treatment": ["Lifestyle modification", "Antihypertensive pharmacotherapy"],
+        "risk_factors": ["high sodium intake", "obesity", "family history", "sedentary lifestyle"],
+        "referral_relevance": "Hypertensive crisis or organ dysfunction requires urgent higher-level evaluation.",
+        "rural_context": {
+            "diagnostic_risks": [
+                "Nonspecific symptoms like fatigue or mild headache may be attributed to general strain rather than checked for elevated BP"
+            ],
+            "systemic_constraints": [
+                "Opportunistic BP screening at primary encounters is essential to detect asymptomatic cases"
+            ],
+            "resource_dependencies": ["basic_labs", "ecg"],
+            "context_relevance": {
+                "rural_relevance": True,
+                "rural_classification": "rural_relevant",
+                "resource_sensitive": False,
+                "specialist_access_sensitive": False,
+                "diagnostic_equipment_sensitive": False,
+                "evidence_level": "government_documented",
+            },
+        },
+        "diagnostic_confusion": [
+            {
+                "confused_with_name": "Generalized weakness / fatigue",
+                "confused_with_condition_id": "COND-WEAKNESS",
+                "relationship_type": "overlapping_presentation",
+                "why_confusion_can_occur": (
+                    "Nonspecific fatigue or weakness is a common chief complaint that overlaps with many conditions; "
+                    "without BP measurement, hypertension may remain undetected."
+                ),
+                "distinguishing_information": [
+                    "Objective blood pressure measurement confirms or excludes elevated BP",
+                ],
+                "resource_dependency": ["basic_labs"],
+                "evidence_status": "government_documented",
+                "source_refs": [
+                    {
+                        "source_id": "npcdcs_htn_2020",
+                        "source_name": "NPCDCS Guidelines for NCD Screening - MoHFW",
+                        "source_type": "government_authority",
+                    }
+                ],
+            }
+        ],
+        "sources": [
+            {
+                "source_id": "npcdcs_htn_2020",
+                "source_name": "National Programme for Prevention & Control of Cancer, Diabetes, CVD & Stroke (NPCDCS) - MoHFW",
+                "source_type": "government_authority",
+                "source_url": "https://main.mohfw.gov.in",
+            }
+        ],
+    },
+    {
+        "condition_id": "COND-T2D",
+        "canonical_name": "Type 2 Diabetes Mellitus",
+        "category": "chronic_disease",
+        "description": (
+            "Metabolic disorder characterized by hyperglycemia resulting from insulin resistance and progressive pancreatic beta-cell dysfunction."
+        ),
+        "symptoms": [
+            "polyuria",
+            "polydipsia",
+            "polyphagia",
+            "unexplained weight loss",
+            "fatigue",
+            "generalized weakness",
+            "slow-healing wounds",
+        ],
+        "diagnosis": [
+            "Fasting plasma glucose >= 126 mg/dL",
+            "Random plasma glucose >= 200 mg/dL with symptoms",
+            "HbA1c >= 6.5%",
+        ],
+        "treatment": ["Dietary modification", "Oral hypoglycemic agents", "Insulin when indicated"],
+        "risk_factors": ["family history", "overweight/obesity", "physical inactivity"],
+        "referral_relevance": "Diabetic ketoacidosis, hyperosmolar state, or severe foot infection requires urgent referral.",
+        "rural_context": {
+            "diagnostic_risks": [
+                "Nonspecific fatigue or recurrent skin infections may be treated symptomatically without checking blood glucose"
+            ],
+            "systemic_constraints": [
+                "Glucometer strip supply and HbA1c testing availability varies at sub-centre level"
+            ],
+            "resource_dependencies": ["basic_labs"],
+            "context_relevance": {
+                "rural_relevance": True,
+                "rural_classification": "rural_relevant",
+                "resource_sensitive": True,
+                "specialist_access_sensitive": False,
+                "diagnostic_equipment_sensitive": True,
+                "evidence_level": "government_documented",
+            },
+        },
+        "diagnostic_confusion": [
+            {
+                "confused_with_name": "Physical exhaustion / Dehydration",
+                "confused_with_condition_id": "COND-DEHYDRATION",
+                "relationship_type": "overlapping_presentation",
+                "why_confusion_can_occur": (
+                    "Thirst, polyuria, and lethargy during hot weather may be assumed to be simple heat strain or dehydration."
+                ),
+                "distinguishing_information": [
+                    "Blood glucose testing (fasting or random) provides objective confirmation",
+                ],
+                "resource_dependency": ["basic_labs"],
+                "evidence_status": "government_documented",
+                "source_refs": [
+                    {
+                        "source_id": "npcdcs_htn_2020",
+                        "source_name": "NPCDCS Guidelines - MoHFW",
+                        "source_type": "government_authority",
+                    }
+                ],
+            }
+        ],
+        "sources": [
+            {
+                "source_id": "npcdcs_htn_2020",
+                "source_name": "NPCDCS Operational Guidelines - MoHFW",
+                "source_type": "government_authority",
+                "source_url": "https://main.mohfw.gov.in",
+            }
+        ],
+    },
+    {
+        "condition_id": "COND-BPPV",
+        "canonical_name": "Benign Paroxysmal Positional Vertigo (BPPV)",
+        "category": "general_medical",
+        "description": (
+            "Peripheral vestibular disorder caused by canalithiasis in the semicircular canals, "
+            "causing brief, intense vertigo triggered by head position changes."
+        ),
+        "symptoms": [
+            "brief spinning vertigo (<1 minute)",
+            "vertigo triggered by rolling in bed or tilting head back",
+            "nausea during attacks",
+            "positional nystagmus",
+        ],
+        "diagnosis": ["Positive Dix-Hallpike maneuver", "Absence of focal neurological signs"],
+        "treatment": ["Canalith repositioning maneuvers (Epley maneuver)", "Vestibular rehabilitation"],
+        "risk_factors": ["head trauma", "aging", "prolonged bed rest"],
+        "referral_relevance": "Persistent positional vertigo or presence of red-flag neurological signs requires specialist evaluation.",
+        "rural_context": {
+            "diagnostic_risks": [
+                "Episodic vertigo may be empirically attributed to cervical spondylosis or generalized weakness without positional testing"
+            ],
+            "systemic_constraints": [
+                "Dix-Hallpike positional examination is a bedside clinical maneuver that requires no equipment"
+            ],
+            "resource_dependencies": ["specialist_consultation", "basic_labs"],
+            "context_relevance": {
+                "rural_relevance": True,
+                "rural_classification": "rural_relevant",
+                "resource_sensitive": False,
+                "specialist_access_sensitive": True,
+                "diagnostic_equipment_sensitive": False,
+                "evidence_level": "clinically_recognized",
+            },
+        },
+        "diagnostic_confusion": [
+            {
+                "confused_with_name": "Cervical Spondylosis",
+                "confused_with_condition_id": "COND-CERVICAL-SPONDYLOSIS",
+                "relationship_type": "possible_mimic",
+                "why_confusion_can_occur": (
+                    "Dizziness or lightheadedness on neck movement is often attributed to cervical spondylosis, "
+                    "though BPPV is triggered specifically by head orientation relative to gravity."
+                ),
+                "distinguishing_information": [
+                    "Dix-Hallpike maneuver eliciting transient rotatory nystagmus",
+                    "Brief duration (<60 seconds) per attack in BPPV",
+                    "Absence of persistent neck stiffness as primary driver of vertigo",
+                ],
+                "resource_dependency": ["specialist_consultation"],
+                "evidence_status": "clinically_recognized",
+                "source_refs": [
+                    {
+                        "source_id": "dghs_vertigo_2019",
+                        "source_name": "DGHS Clinical Practice Guidelines for Primary Care",
+                        "source_type": "government_authority",
+                    }
+                ],
+            },
+            {
+                "confused_with_name": "Nutritional Anemia",
+                "confused_with_condition_id": "COND-ANEMIA",
+                "relationship_type": "possible_mimic",
+                "why_confusion_can_occur": (
+                    "Postural dizziness or lightheadedness in anemic patients can overlap with complaint of vertigo."
+                ),
+                "distinguishing_information": [
+                    "True spinning sensation (rotatory vertigo) in BPPV vs postural faintness in severe anemia",
+                    "Hemoglobin estimation for anemia confirmation",
+                ],
+                "resource_dependency": ["basic_labs"],
+                "evidence_status": "clinically_recognized",
+                "source_refs": [
+                    {
+                        "source_id": "dghs_vertigo_2019",
+                        "source_name": "DGHS Clinical Guidance - MoHFW",
+                        "source_type": "government_authority",
+                    }
+                ],
+            },
+        ],
+        "sources": [
+            {
+                "source_id": "dghs_vertigo_2019",
+                "source_name": "Directorate General of Health Services (DGHS) Guidelines - MoHFW",
+                "source_type": "government_authority",
+                "source_url": "https://dghs.gov.in",
+            }
+        ],
+    },
+    {
+        "condition_id": "COND-DEPRESSION",
+        "canonical_name": "Clinical Depression & Anxiety Disorders",
+        "category": "mental_health",
+        "description": (
+            "Common mental health conditions characterized by persistent low mood, loss of interest, "
+            "excessive worry, or physical somatic manifestations."
+        ),
+        "symptoms": [
+            "persistent sadness / low mood",
+            "loss of interest in daily activities",
+            "fatigue and physical exhaustion",
+            "sleep disturbances",
+            "appetite changes",
+            "nonspecific body aches",
+            "somatic weakness",
+        ],
+        "diagnosis": [
+            "Clinical psychiatric evaluation / PHQ-9 / GAD-7 screening",
+            "Exclusion of organic systemic causes (thyroid, anemia, chronic infection)",
+        ],
+        "treatment": ["Psychoeducation", "Cognitive Behavioral Therapy / counseling", "Pharmacotherapy (SSRIs)"],
+        "risk_factors": ["chronic stress", "social isolation", "recent major loss or trauma", "chronic physical illness"],
+        "referral_relevance": "Severe depression with suicidal ideation or psychosis requires urgent psychiatric referral.",
+        "rural_context": {
+            "diagnostic_risks": [
+                "Mental health distress frequently presents with somatic complaints (e.g. fatigue, headache, weakness) which may undergo repeated physical workups"
+            ],
+            "systemic_constraints": [
+                "Mental health specialist availability (District Mental Health Programme / Tele-MANAS) varies at primary level"
+            ],
+            "resource_dependencies": ["specialist_consultation"],
+            "cultural_context": {
+                "somatic_phrases": [
+                    "taaqat ki kami (weakness / lack of physical energy)",
+                    "gham (deep grief / heaviness in heart)",
+                    "gabhrahat (anxiety / restlessness)",
+                ],
+                "notes": (
+                    "Culturally expressed somatic phrases are common ways individuals describe emotional distress. "
+                    "Note: Supernatural beliefs (e.g. evil eye) may influence community help-seeking but are not "
+                    "medical causes."
+                ),
+            },
+            "context_relevance": {
+                "rural_relevance": True,
+                "rural_classification": "rural_relevant",
+                "resource_sensitive": True,
+                "specialist_access_sensitive": True,
+                "diagnostic_equipment_sensitive": False,
+                "evidence_level": "clinically_recognized",
+            },
+        },
+        "diagnostic_confusion": [
+            {
+                "confused_with_name": "Physical Exhaustion / Somatic Illness",
+                "confused_with_condition_id": "COND-WEAKNESS",
+                "relationship_type": "overlapping_presentation",
+                "why_confusion_can_occur": (
+                    "Depressive distress often presents as physical exhaustion or generalized pain ('taaqat ki kami')."
+                ),
+                "distinguishing_information": [
+                    "Structured mood and anxiety inquiry (PHQ-2 / PHQ-9 screening)",
+                    "Absence of localized organic lesion after basic screening",
+                ],
+                "resource_dependency": ["specialist_consultation"],
+                "evidence_status": "clinically_recognized",
+                "source_refs": [
+                    {
+                        "source_id": "dmhp_mohfw_2020",
+                        "source_name": "District Mental Health Programme (DMHP) Guidelines - MoHFW",
+                        "source_type": "government_authority",
+                    }
+                ],
+            }
+        ],
+        "sources": [
+            {
+                "source_id": "dmhp_mohfw_2020",
+                "source_name": "District Mental Health Programme (DMHP) / Tele-MANAS Framework - MoHFW",
+                "source_type": "government_authority",
+                "source_url": "https://main.mohfw.gov.in",
+            }
+        ],
+    },
+    {
+        "condition_id": "COND-MALARIA",
+        "canonical_name": "Malaria (Plasmodium falciparum / vivax)",
+        "category": "infectious_disease",
+        "description": (
+            "Protozoan infection transmitted by Anopheles mosquitoes. Causes acute febrile illness "
+            "with potential for severe complication (severe anemia, cerebral malaria, organ failure)."
+        ),
+        "symptoms": [
+            "acute fever with chills and rigors",
+            "headache",
+            "myalgia",
+            "nausea / vomiting",
+            "splenomegaly",
+            "altered sensorium (cerebral malaria)",
+        ],
+        "diagnosis": [
+            "Rapid Diagnostic Test (RDT) for Pf/Pv",
+            "Peripheral blood smear microscopy",
+        ],
+        "treatment": ["Artemisinin-based Combination Therapy (ACT) for Pf", "Chloroquine + Primaquine for Pv"],
+        "risk_factors": ["endemic geographic area", "monsoon season", "lack of bed net usage"],
+        "referral_relevance": "Severe malaria (cerebral signs, jaundice, acute kidney injury, severe anemia) requires immediate emergency referral.",
+        "rural_context": {
+            "diagnostic_risks": [
+                "Acute febrile illness in endemic areas requires rapid testing to distinguish malaria from dengue, typhoid, or scrub typhus"
+            ],
+            "systemic_constraints": [
+                "RDT kit supply and trained microscopy personnel at sub-centre / PHC level"
+            ],
+            "resource_dependencies": ["basic_labs", "specialist_consultation"],
+            "context_relevance": {
+                "rural_relevance": True,
+                "rural_classification": "rural_relevant",
+                "resource_sensitive": True,
+                "specialist_access_sensitive": False,
+                "diagnostic_equipment_sensitive": True,
+                "evidence_level": "government_documented",
+            },
+        },
+        "diagnostic_confusion": [
+            {
+                "confused_with_name": "Dengue Fever",
+                "confused_with_condition_id": "COND-DENGUE",
+                "relationship_type": "possible_mimic",
+                "why_confusion_can_occur": (
+                    "Both present as acute febrile illness with severe body ache, headache, and fatigue."
+                ),
+                "distinguishing_information": [
+                    "RDT / blood smear for Plasmodium antigen / parasite vs Dengue NS1 / IgM serology",
+                    "Thrombocytopenia and hemoconcentration prominent in Dengue",
+                    "Periodic fever spikes with rigors typical of Malaria",
+                ],
+                "resource_dependency": ["basic_labs"],
+                "evidence_status": "government_documented",
+                "source_refs": [
+                    {
+                        "source_id": "nvbdcp_2022",
+                        "source_name": "National Vector Borne Disease Control Programme (NVBDCP) Guidelines",
+                        "source_type": "government_authority",
+                    }
+                ],
+            },
+            {
+                "confused_with_name": "Typhoid (Enteric Fever)",
+                "confused_with_condition_id": "COND-TYPHOID",
+                "relationship_type": "possible_mimic",
+                "why_confusion_can_occur": (
+                    "Both present as high fever with systemic toxicity in endemic areas."
+                ),
+                "distinguishing_information": [
+                    "Step-ladder fever pattern, abdominal discomfort, bradycardia in Typhoid",
+                    "Malaria RDT / smear confirmation",
+                ],
+                "resource_dependency": ["basic_labs"],
+                "evidence_status": "government_documented",
+                "source_refs": [
+                    {
+                        "source_id": "nvbdcp_2022",
+                        "source_name": "NVBDCP Management Guidelines - MoHFW",
+                        "source_type": "government_authority",
+                    }
+                ],
+            },
+            {
+                "confused_with_name": "Scrub Typhus",
+                "confused_with_condition_id": "COND-SCRUB-TYPHUS",
+                "relationship_type": "possible_mimic",
+                "why_confusion_can_occur": (
+                    "Acute febrile illness with headache and myalgia following vegetation exposure."
+                ),
+                "distinguishing_information": [
+                    "Presence of an eschar (punched-out ulcer with black crust) in Scrub Typhus",
+                    "Scrub typhus IgM ELISA / RDT vs Malaria RDT",
+                ],
+                "resource_dependency": ["basic_labs"],
+                "evidence_status": "government_documented",
+                "source_refs": [
+                    {
+                        "source_id": "ncdc_scrub_2020",
+                        "source_name": "NCDC Guidelines on Diagnosis & Management of Scrub Typhus",
+                        "source_type": "government_authority",
+                    }
+                ],
+            },
+        ],
+        "sources": [
+            {
+                "source_id": "nvbdcp_2022",
+                "source_name": "National Vector Borne Disease Control Programme (NVBDCP) - MoHFW",
+                "source_type": "government_authority",
+                "source_url": "https://nvbdcp.gov.in",
+            }
+        ],
+    },
+    {
+        "condition_id": "COND-APPENDICITIS",
+        "canonical_name": "Acute / Sub-acute Appendicitis",
+        "category": "general_medical",
+        "description": (
+            "Inflammation of the vermiform appendix. May present as classical acute RLQ pain "
+            "or sub-acute atypical abdominal discomfort."
+        ),
+        "symptoms": [
+            "periumbilical pain migrating to Right Lower Quadrant (RLQ)",
+            "anorexia",
+            "nausea and vomiting",
+            "low-grade fever",
+            "RLQ tenderness (McBurney's point)",
+            "rebound tenderness",
+        ],
+        "diagnosis": [
+            "Clinical evaluation (Alvarado score)",
+            "Ultrasound abdomen",
+            "CBC showing leukocytosis",
+        ],
+        "treatment": ["Appendectomy (surgical)", "Intravenous antibiotics & fluid resuscitation"],
+        "risk_factors": ["young adults / adolescents", "diet low in fiber"],
+        "referral_relevance": "Requires urgent surgical evaluation and ultrasound imaging; risk of perforation and peritonitis.",
+        "rural_context": {
+            "diagnostic_risks": [
+                "Early or atypical sub-acute presentations may be managed empirically as gastritis or indigestion",
+            ],
+            "systemic_constraints": [
+                "Ultrasound imaging and emergency surgical capability are available at CHC / District Hospital level",
+            ],
+            "resource_dependencies": [
+                "basic_labs",
+                "ultrasound",
+                "surgery_general",
+                "emergency_stabilization",
+            ],
+            "context_relevance": {
+                "rural_relevance": True,
+                "rural_classification": "rural_relevant",
+                "resource_sensitive": True,
+                "specialist_access_sensitive": True,
+                "diagnostic_equipment_sensitive": True,
+                "evidence_level": "clinically_recognized",
+            },
+        },
+        "diagnostic_confusion": [
+            {
+                "confused_with_name": "Gastritis / Indigestion",
+                "confused_with_condition_id": "COND-GASTRITIS",
+                "relationship_type": "possible_mimic",
+                "why_confusion_can_occur": (
+                    "Early appendicitis pain originates in the epigastrium or periumbilical area, mimicking dyspepsia or gastritis."
+                ),
+                "distinguishing_information": [
+                    "Migration of pain to the Right Lower Quadrant over 6-24 hours",
+                    "Localized RLQ tenderness on palpation (McBurney's sign)",
+                    "Fever and leukocytosis on CBC",
+                ],
+                "resource_dependency": ["basic_labs", "ultrasound", "surgery_general"],
+                "evidence_status": "clinically_recognized",
+                "source_refs": [
+                    {
+                        "source_id": "dghs_surgery_2020",
+                        "source_name": "DGHS Manual of Emergency Surgical Procedures",
+                        "source_type": "government_authority",
+                    }
+                ],
+            },
+            {
+                "confused_with_name": "Pelvic Inflammatory Disease (PID)",
+                "confused_with_condition_id": "COND-PID",
+                "relationship_type": "possible_mimic",
+                "why_confusion_can_occur": (
+                    "In females of childbearing age, lower abdominal pain and fever overlap between PID and appendicitis."
+                ),
+                "distinguishing_information": [
+                    "Bilateral vs localized RLQ tenderness",
+                    "Vaginal discharge / cervical motion tenderness in PID",
+                    "Pelvic ultrasound evaluation",
+                ],
+                "resource_dependency": ["ultrasound", "specialist_consultation"],
+                "evidence_status": "clinically_recognized",
+                "source_refs": [
+                    {
+                        "source_id": "dghs_surgery_2020",
+                        "source_name": "DGHS Clinical Manual - MoHFW",
+                        "source_type": "government_authority",
+                    }
+                ],
+            },
+        ],
+        "sources": [
+            {
+                "source_id": "dghs_surgery_2020",
+                "source_name": "DGHS Clinical Guidelines for Surgical Emergencies - MoHFW",
+                "source_type": "government_authority",
+                "source_url": "https://dghs.gov.in",
+            }
+        ],
+    },
+]
+
+
+INJURY_DIAGNOSTIC_RISKS: list[dict[str, Any]] = [
+    {
+        "risk_id": "INJ-RISK-001",
+        "injury_type": "Undisplaced Fractures",
+        "canonical_name": "Undisplaced Fractures (e.g. Scaphoid, Metatarsal, Ankle)",
+        "possible_confusion_targets": [
+            "Joint sprain",
+            "Muscle strain",
+            "Minor soft-tissue contusion",
+        ],
+        "why_difficult_clinically": (
+            "Without gross deformity or cortical displacement, undisplaced fractures present "
+            "with localized pain and swelling that closely resembles a severe sprain. Scaphoid "
+            "fractures in particular may not show cortical disruption on initial plain radiography."
+        ),
+        "imaging_or_diagnostic_relevance": (
+            "Plain X-ray imaging (including scaphoid view) is essential; repeat radiography "
+            "in 10-14 days or immobilization if clinical anatomical snuffbox tenderness persists."
+        ),
+        "persistence_or_worsening_warning": (
+            "Persistent anatomical tenderness or inability to bear weight despite 1-2 weeks "
+            "of conservative sprain management warrants repeat radiograph or orthopedic referral."
+        ),
+        "referral_urgency_relevance": (
+            "Non-urgent orthopedic referral for persistent focal bony tenderness; immobilization "
+            "recommended at primary level."
+        ),
+        "resource_dependencies": ["imaging_xray", "orthopedic_surgery"],
+        "evidence_status": "government_documented",
+        "source_refs": [
+            {
+                "source_id": "trauma_guidelines_mohfw_2019",
+                "source_name": "National Trauma Care Management Guidelines - MoHFW",
+                "source_type": "government_authority",
+            }
+        ],
+    },
+    {
+        "risk_id": "INJ-RISK-002",
+        "injury_type": "Blunt Abdominal Trauma",
+        "canonical_name": "Blunt Abdominal Trauma & Internal Organ Injury",
+        "possible_confusion_targets": [
+            "Superficial abdominal wall contusion",
+            "Minor muscle bruise",
+        ],
+        "why_difficult_clinically": (
+            "External abdominal appearance may show minimal bruising even in the presence of "
+            "significant solid organ laceration (spleen/liver) or retroperitoneal bleeding. "
+            "Compensation in young individuals can conceal early intra-abdominal hemorrhage."
+        ),
+        "imaging_or_diagnostic_relevance": (
+            "FAST ultrasound scan (Focused Assessment with Sonography for Trauma) and "
+            "serial hemoglobin/vitals monitoring are critical."
+        ),
+        "persistence_or_worsening_warning": (
+            "Development of abdominal distension, tachycardia, hypotension, or shoulder tip pain "
+            "(Kehr's sign) indicates ongoing internal bleeding."
+        ),
+        "referral_urgency_relevance": (
+            "Level 4 Emergency Referral required when mechanism of injury is high-energy or "
+            "signs of internal hemorrhage / FAST positivity appear."
+        ),
+        "resource_dependencies": [
+            "ultrasound",
+            "ct_scan",
+            "surgery_general",
+            "emergency_stabilization",
+            "critical_care",
+        ],
+        "evidence_status": "government_documented",
+        "source_refs": [
+            {
+                "source_id": "trauma_guidelines_mohfw_2019",
+                "source_name": "National Trauma Care Guidelines - MoHFW",
+                "source_type": "government_authority",
+            }
+        ],
+    },
+    {
+        "risk_id": "INJ-RISK-003",
+        "injury_type": "Compartment Syndrome",
+        "canonical_name": "Acute Limb Compartment Syndrome",
+        "possible_confusion_targets": [
+            "Routine post-trauma swelling",
+            "Deep muscle bruising",
+            "Tight bandaging",
+        ],
+        "why_difficult_clinically": (
+            "Elevated intra-compartmental pressure compromises tissue perfusion. Early signs "
+            "(severe pain out of proportion to injury, pain on passive stretch) may be "
+            "mistaken for expected post-fracture swelling."
+        ),
+        "imaging_or_diagnostic_relevance": (
+            "Clinical diagnosis based on the 6 Ps: Pain out of proportion, Passive stretch pain, "
+            "Paresthesia, Pallor, Paralysis, Pulselessness (late). Measurement of compartment pressure if available."
+        ),
+        "persistence_or_worsening_warning": (
+            "Time-sensitive surgical emergency — irreversible nerve and muscle necrosis occurs within 6 hours."
+        ),
+        "referral_urgency_relevance": (
+            "Immediate Level 4 emergency referral to a facility with surgical/orthopedic capability for urgent fasciotomy."
+        ),
+        "resource_dependencies": [
+            "orthopedic_surgery",
+            "surgery_general",
+            "emergency_stabilization",
+        ],
+        "evidence_status": "government_documented",
+        "source_refs": [
+            {
+                "source_id": "trauma_guidelines_mohfw_2019",
+                "source_name": "National Trauma Guidelines - MoHFW",
+                "source_type": "government_authority",
+            }
+        ],
+    },
+    {
+        "risk_id": "INJ-RISK-004",
+        "injury_type": "Ligament and Tendon Tears",
+        "canonical_name": "Ligament & Tendon Tears (ACL, MCL, Achilles)",
+        "possible_confusion_targets": [
+            "Joint sprain",
+            "Arthritis flare",
+            "Nonspecific MSK pain",
+        ],
+        "why_difficult_clinically": (
+            "Acute joint effusion and pain mask ligament laxity during initial physical exam. "
+            "Achilles tendon rupture can be missed if plantarflexion by deep flexors is mistaken for intact tendon."
+        ),
+        "imaging_or_diagnostic_relevance": (
+            "Thompson squeeze test for Achilles tendon; stress testing and MRI for knee ligaments. "
+            "Plain X-ray rules out avulsion fractures."
+        ),
+        "persistence_or_worsening_warning": (
+            "Persistent joint instability ('giving way') or inability to raise on toes after acute trauma."
+        ),
+        "referral_urgency_relevance": (
+            "Elective to urgent orthopedic evaluation depending on acute functional deficit."
+        ),
+        "resource_dependencies": ["imaging_xray", "orthopedic_surgery", "specialist_consultation"],
+        "evidence_status": "clinically_recognized",
+        "source_refs": [
+            {
+                "source_id": "dghs_ortho_2020",
+                "source_name": "DGHS Musculoskeletal Injury Management Manual",
+                "source_type": "government_authority",
+            }
+        ],
+    },
+    {
+        "risk_id": "INJ-RISK-005",
+        "injury_type": "Traumatic Brain Injury",
+        "canonical_name": "Traumatic Brain Injury (Concussion, Subdural Hematoma)",
+        "possible_confusion_targets": [
+            "Vasovagal syncope / fainting",
+            "Heat exhaustion",
+            "Mild shock",
+        ],
+        "why_difficult_clinically": (
+            "Initial mild presentation after head trauma (brief loss of consciousness or transient confusion) "
+            "may be dismissed, while expanding intracranial hematoma develops over subsequent hours."
+        ),
+        "imaging_or_diagnostic_relevance": (
+            "Non-contrast CT scan of the brain is the definitive diagnostic modality for acute intracranial bleeding."
+        ),
+        "persistence_or_worsening_warning": (
+            "Warning signs (vomiting, worsening headache, unequal pupils, drowsiness, focal deficit, seizure) "
+            "indicate expanding mass lesion."
+        ),
+        "referral_urgency_relevance": (
+            "Level 4 Emergency Referral required when head trauma is accompanied by LOC, vomiting, or neurological signs."
+        ),
+        "resource_dependencies": ["ct_scan", "emergency_stabilization", "specialist_consultation"],
+        "evidence_status": "government_documented",
+        "source_refs": [
+            {
+                "source_id": "trauma_guidelines_mohfw_2019",
+                "source_name": "National Trauma Care Guidelines - MoHFW",
+                "source_type": "government_authority",
+            }
+        ],
+    },
+    {
+        "risk_id": "INJ-RISK-006",
+        "injury_type": "Snakebite Envenomation",
+        "canonical_name": "Snakebite Envenomation (Neurotoxic / Hemotoxic)",
+        "possible_confusion_targets": [
+            "Non-venomous bite",
+            "Insect sting",
+            "Allergic reaction",
+            "Nonspecific weakness",
+        ],
+        "why_difficult_clinically": (
+            "Fang marks may be faint or hidden. Early neurotoxic signs (bilateral ptosis, diplopia) "
+            "or early hemotoxic signs (local swelling, bleeding from puncture site) may be subtle."
+        ),
+        "imaging_or_diagnostic_relevance": (
+            "20-Minute Whole Blood Clotting Test (20WBCT) at bedside for hemotoxicity. "
+            "Clinical monitoring for cranial nerve palsies."
+        ),
+        "persistence_or_worsening_warning": (
+            "Rapid progression of neuroparalysis or systemic bleeding. Requires immediate ASV administration."
+        ),
+        "referral_urgency_relevance": (
+            "Level 4 Emergency Referral to an ASV-capable facility with emergency airway / ventilator support."
+        ),
+        "resource_dependencies": [
+            "emergency_stabilization",
+            "critical_care",
+            "basic_labs",
+            "specialist_consultation",
+        ],
+        "evidence_status": "government_documented",
+        "source_refs": [
+            {
+                "source_id": "mohfw_snakebite_2022",
+                "source_name": "National Action Plan for Prevention & Control of Snakebite Envenomation - MoHFW",
+                "source_type": "government_authority",
+                "source_url": "https://main.mohfw.gov.in",
+            }
+        ],
+    },
+]

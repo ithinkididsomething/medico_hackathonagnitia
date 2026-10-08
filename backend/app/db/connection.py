@@ -143,7 +143,30 @@ def init_db(settings: Settings | None = None) -> str:
     schema_sql = schema_path.read_text(encoding="utf-8")
     with db_session(settings) as connection:
         connection.executescript(schema_sql)
+        if dialect == "sqlite":
+            _migrate_sqlite(connection)
     return settings.database_url
+
+
+def _migrate_sqlite(connection) -> None:
+    """Apply additive migrations to pre-existing SQLite databases.
+
+    Fresh databases already get the full schema from schema.sql; existing demo
+    databases need only the new hospital columns added (Prompt 6).
+    """
+    columns = {
+        "ayushman_empaneled": "INTEGER NOT NULL DEFAULT 0",
+        "ayushman_verification_date": "TEXT",
+        "scheme_supported_specialties": "TEXT NOT NULL DEFAULT '[]'",
+        "scheme_supported_packages": "TEXT NOT NULL DEFAULT '[]'",
+    }
+    existing = {
+        row["name"] for row in connection.execute("PRAGMA table_info(hospitals)").fetchall()
+    }
+    for column, ddl in columns.items():
+        if column in existing:
+            continue
+        connection.execute(f"ALTER TABLE hospitals ADD COLUMN {column} {ddl}")
 
 
 def ping(settings: Settings | None = None) -> tuple[bool, str | None]:

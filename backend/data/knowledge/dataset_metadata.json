@@ -1,0 +1,15 @@
+{
+  "systemic_driver_count": 3,
+  "condition_count": 8,
+  "diagnostic_confusion_relationship_count": 14,
+  "injury_risk_relationship_count": 6,
+  "rural_relevant_condition_count": 8,
+  "unresolved_condition_reference_count": 14,
+  "claims_requiring_review": 14,
+  "evidence_status_counts": {
+    "government_documented": 16,
+    "clinically_recognized": 6,
+    "government_supported": 1
+  },
+  "version": "1.0.0-prototype"
+}

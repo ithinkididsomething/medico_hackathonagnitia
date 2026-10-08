@@ -11,9 +11,16 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from .api.knowledge_routes import router as knowledge_router
 from .api.routes import API_VERSION, router as api_router
+from .api.scheme_routes import router as scheme_router
 from .config import get_settings
 from .db.connection import init_db
+from .db.repository import (
+    seed_hospital_scheme_eligibility,
+    seed_scheme_catalog,
+    seed_synthetic_hospitals,
+)
 from .maps.errors import MapsServiceError
 from .rules.engine import RuleError
 
@@ -21,6 +28,9 @@ from .rules.engine import RuleError
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.state.database_url = init_db()
+    app.state.seeded_hospitals = seed_synthetic_hospitals()
+    app.state.seeded_schemes = seed_scheme_catalog()
+    app.state.seeded_scheme_eligibility = seed_hospital_scheme_eligibility()
     yield
 
 
@@ -29,8 +39,10 @@ app = FastAPI(
     version=API_VERSION,
     description=(
         "Clinical referral decision-support prototype API: health, patient "
-        "assessment (urgency + initial clinic decision), demonstration rule "
-        "engine, maps config. Decision support only — not a medical device."
+        "assessment (urgency + clinic capability + initial decision), "
+        "capability-based hospital matching with transparent scoring, "
+        "demonstration rule engine, maps config. Decision support only - "
+        "not a medical device. Hospital data is SYNTHETIC demonstration data."
     ),
     lifespan=lifespan,
 )
@@ -45,6 +57,8 @@ app.add_middleware(
 )
 
 app.include_router(api_router, prefix="/api")
+app.include_router(scheme_router, prefix="/api")
+app.include_router(knowledge_router, prefix="/api")
 
 
 @app.exception_handler(MapsServiceError)
